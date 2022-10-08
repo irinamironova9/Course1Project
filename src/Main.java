@@ -5,7 +5,7 @@ public class Main {
         Employee anna = new Employee("Сидорова Анна Ивановна", 3, 85_000d);
         addEmployee(employeesBook, anna);
 
-        Employee boris = new Employee("Иванов Борис Фёдорович", 5, 50_000d);
+        Employee boris = new Employee("Иванов Борис Фёдорович", 5, 70_000d);
         addEmployee(employeesBook, boris);
 
         Employee olga = new Employee("Потапова Ольга Алексеевна", 1, 100_000d);
@@ -13,15 +13,31 @@ public class Main {
 
         printAllEmployees(employeesBook);
 
+        olga.setDepartment(2);
+        System.out.printf("Теперь %s работает в отделе №%s.%n", olga.getFullName(), olga.getDepartment());
+
+        boris.setSalary(80_000);
+        System.out.printf("Теперь %s получает %.2f рублей в месяц.%n", boris.getFullName(), boris.getSalary());
+
         double sumOfSalaries = calculateSumOfSalaries(employeesBook);
         System.out.printf("Сумма зарплат за месяц = %.2f рублей.%n", sumOfSalaries);
 
         findLowestSalaryEmployee(employeesBook);
         findHighestSalaryEmployee(employeesBook);
+
+        System.out.printf("Средняя зарплата среди всех сотрудников = %.2f рублей.%n", calculateAverageSalary(employeesBook));
+
+        printNames(employeesBook);
     }
 
     public static void printAllEmployees(Employee[] employeesBook) {
+        if (employeesBook[0] == null) {
+            System.out.println("Книга учёта сотрудников пуста.");
+        }
         for (Employee employee : employeesBook) {
+            if (employee == null) {
+                break;
+            }
             System.out.println(employee);
         }
     }
@@ -34,6 +50,9 @@ public class Main {
     }
 
     public static double calculateSumOfSalaries(Employee[] employeesBook) {
+        if (employeesBook[0] == null) {
+            throw new RuntimeException("Книга учёта сотрудников пуста.");
+        }
         double sumOfSalaries = 0;
         for (Employee employee : employeesBook) {
             if (employee == null) {
@@ -77,5 +96,22 @@ public class Main {
             }
         }
         System.out.printf("Сотрудник с максимальной зарплатой в %.2f рублей - %s.%n", highestSalary, employeesBook[index].getFullName());
+    }
+
+    public static double calculateAverageSalary(Employee[] employeesBook) {
+        double sumOfSalaries = calculateSumOfSalaries(employeesBook);
+        return sumOfSalaries / (Employee.getCOUNTER() - 1);
+    }
+
+    public static void printNames(Employee[] employeesBook) {
+        if (employeesBook[0] == null) {
+            System.out.println("Книга учёта сотрудников пуста.");
+        }
+        for (Employee employee : employeesBook) {
+            if (employee == null) {
+                break;
+            }
+            System.out.println(employee.getFullName());
+        }
     }
 }

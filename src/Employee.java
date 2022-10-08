@@ -32,6 +32,10 @@ public class Employee {
         return id;
     }
 
+    public static int getCOUNTER() {
+        return COUNTER;
+    }
+
     public void setDepartment(int department) {
         if (department < 1 || department > 5) {
             throw new IllegalArgumentException("Недопустимый номер отдела");
