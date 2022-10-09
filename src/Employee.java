@@ -49,6 +49,10 @@ public class Employee {
 
     @Override
     public String toString() {
-        return fullName + ", " +"отдел №" + department + ", з/п " + salary + " руб., id = " + id;
+        return fullName + ", отдел №" + department + ", з/п " + salary + " руб./мес., id = " + id;
+    }
+
+    public String displayWithoutDepartment() {
+        return fullName + ", з/п " + salary + " руб./мес., id = " + id;
     }
 }
