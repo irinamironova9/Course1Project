@@ -11,7 +11,11 @@ public class Main {
         employeeBook.addEmployee("Ли Чэньюй", 3, 68_000);
         employeeBook.addEmployee("Кузнецов Олег Дмитриевич", 2, 90_000);
 
+        System.out.println("В книге учёта сотрудников записано " + employeeBook.getFilledIn() + " человек.");
+        printDivider();
+
         employeeBook.printAllEmployees();
+        printDivider();
 
         double sumOfSalaries = employeeBook.calculateSumOfSalaries();
         System.out.printf("Сумма зарплат за месяц = %.2f рублей.%n", sumOfSalaries);
@@ -34,7 +38,7 @@ public class Main {
         employeeBook.indexSalaries_Department(5, 8);
         employeeBook.printAllEmployees();
 
-        employeeBook.printDepartmentEmployees(2);
+        employeeBook.printOnlyDepartmentEmployees(2);
 
         System.out.println(" --- ");
         employeeBook.printWhoIsBelow(80_000);
@@ -42,6 +46,10 @@ public class Main {
         employeeBook.printWhoIsAbove(80_000);
         System.out.println(" --- ");
 
-        employeeBook.printByDepartment();
+        employeeBook.printAllByDepartment();
+    }
+
+    public static void printDivider() {
+        System.out.println("-----");
     }
 }
