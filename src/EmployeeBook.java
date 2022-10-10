@@ -6,13 +6,17 @@ public class EmployeeBook {
         this.employeeBook = new Employee[10];
     }
 
+    public Employee[] getEmployeeBook() {
+        return employeeBook;
+    }
+
     public int getFilledIn() {
         return filledIn;
     }
 
     public void checkEmployeeBookIsNotEmpty() {
         if (filledIn == 0) {
-            throw new RuntimeException("Эта книга учёта сотрудников пуста.");
+            throw new RuntimeException("Эта книга учёта сотрудников пуста!");
         }
     }
 
@@ -26,50 +30,68 @@ public class EmployeeBook {
     }
 
     public void removeEmployee(String fullName) {
+        checkEmployeeBookIsNotEmpty();
         for (int i = 0; i < filledIn; i++) {
             if (employeeBook[i].getFullName().equals(fullName)) {
                 System.out.printf("Сотрудник(ца) %s удален(а).%n", fullName);
                 System.arraycopy(employeeBook, i + 1, employeeBook, i, filledIn - i - 1);
                 employeeBook[filledIn - 1] = null;
                 filledIn--;
-                break;
+                return;
             }
+        }
+        if (true) {
+            throw new RuntimeException("ФИО не найдено!");
         }
     }
 
     public void removeEmployee(int id) {
-        for (Employee employee : employeeBook) {
-            if (employee.getId() == id) {
-                removeEmployee(employee.getFullName());
-                break; // Как здесь лучше: отослать к методу или скопировать код?
+        checkEmployeeBookIsNotEmpty();
+        for (int i = 0; i < filledIn; i++) {
+            if (employeeBook[i].getId() == id) {
+                System.out.printf("Сотрудник(ца) %s удален(а).%n", employeeBook[i].getFullName());
+                System.arraycopy(employeeBook, i + 1, employeeBook, i, filledIn - i - 1);
+                employeeBook[filledIn - 1] = null;
+                filledIn--;
+                return; // По-моему, в данном случае лучше продублировать код из метода выше,
+                // нежели отсылать к нему и прокручивать цикл заново.
             }
+        }
+        if (true) {
+            throw new RuntimeException("ID не найдено!");
         }
     }
 
     public void editDepartment(String fullName, int department) {
         Employee.checkDepartmentIsAcceptable(department);
-        for (Employee employee : employeeBook) {
-            if (employee.getFullName().equals(fullName)) {
-                employee.setDepartment(department);
-                break;
+        checkEmployeeBookIsNotEmpty();
+        for (int i = 0; i < filledIn; i++) {
+            if (employeeBook[i].getFullName().equals(fullName)) {
+                employeeBook[i].setDepartment(department);
+                return;
             }
+        }
+        if (true) {
+            throw new RuntimeException("ФИО не найдено!");
         }
     }
 
     public void editSalary(String fullName, double salary) {
         Employee.checkSalaryIsAcceptable(salary);
-        for (Employee employee : employeeBook) {
-            if (employee.getFullName().equals(fullName)) {
-                employee.setSalary(salary);
-                break;
+        checkEmployeeBookIsNotEmpty();
+        for (int i = 0; i < filledIn; i++) {
+            if (employeeBook[i].getFullName().equals(fullName)) {
+                employeeBook[i].setSalary(salary);
+                return;
             }
+        }
+        if (true) {
+            throw new RuntimeException("ФИО не найдено!");
         }
     }
 
     public void printAllEmployees() {
-        if (filledIn == 0) {
-            System.out.println("Эта книга учёта сотрудников пуста.");
-        }
+        checkEmployeeBookIsNotEmpty();
         for (Employee employee : employeeBook) {
             if (employee == null) {
                 break;
@@ -79,9 +101,7 @@ public class EmployeeBook {
     }
 
     public void printNames() {
-        if (filledIn == 0) {
-            System.out.println("Эта книга учёта сотрудников пуста.");
-        }
+        checkEmployeeBookIsNotEmpty();
         for (Employee employee : employeeBook) {
             if (employee == null) {
                 break;
@@ -92,6 +112,7 @@ public class EmployeeBook {
 
     public void printWhoIsBelow(double salary) {
         Employee.checkSalaryIsAcceptable(salary);
+        checkEmployeeBookIsNotEmpty();
         int numberOfEmployees = 0;
         for (Employee employee : employeeBook) {
             if (employee == null) {
@@ -108,6 +129,7 @@ public class EmployeeBook {
     }
     public void printWhoIsAbove(double salary) {
         Employee.checkSalaryIsAcceptable(salary);
+        checkEmployeeBookIsNotEmpty();
         int numberOfEmployees = 0;
         for (Employee employee : employeeBook) {
             if (employee == null) {
@@ -166,17 +188,16 @@ public class EmployeeBook {
     }
 
     public void indexSalaries(double percent) {
-        for (Employee employee : employeeBook) {
-            if (employee == null) {
-                break;
-            }
-            employee.setSalary(employee.getSalary() + employee.getSalary() / 100 * percent);
+        checkEmployeeBookIsNotEmpty();
+        for (int i = 0; i < filledIn; i++) {
+            employeeBook[i].setSalary(employeeBook[i].getSalary() + employeeBook[i].getSalary() / 100 * percent);
         }
     }
 
     // Методы для работы с отделами:
 
     public void printAllByDepartment() {
+        checkEmployeeBookIsNotEmpty();
         for (int i = 1; i <= 5; i++) {
             System.out.printf("Отдел №%s:%n", i);
             for (Employee employee : employeeBook) {
@@ -192,9 +213,7 @@ public class EmployeeBook {
 
     public void printOnlyDepartmentEmployees(int department) {
         Employee.checkDepartmentIsAcceptable(department);
-        if (filledIn == 0) {
-            System.out.println("Книга учёта сотрудников пуста.");
-        }
+        checkEmployeeBookIsNotEmpty();
         int numberOfEmployees = 0;
         for (Employee employee : employeeBook) {
             if (employee == null) {
@@ -219,8 +238,8 @@ public class EmployeeBook {
             if (employeeBook[i].getDepartment() == department) {
                 if (employeeBook[i].getSalary() < lowestSalary) {
                     lowestSalary = employeeBook[i].getSalary();
+                    index = i;
                 }
-                index = i;
             }
         }
         if (index == -1) {
@@ -253,27 +272,23 @@ public class EmployeeBook {
     public double calculateSumOfSalaries_Department(int department) {
         Employee.checkDepartmentIsAcceptable(department);
         checkEmployeeBookIsNotEmpty();
+        if (countEmployeesInDepartment(department) == 0) {
+            throw new RuntimeException("В отдеде № " + department + " нет сотрудников.");
+        }
         double sumOfSalaries = 0;
-        int numberOfEmployees = 0;
         for (Employee employee : employeeBook) {
             if (employee == null) {
                 break;
             }
             if (employee.getDepartment() == department) {
                 sumOfSalaries += employee.getSalary();
-                numberOfEmployees++;
             }
-        }
-        if (numberOfEmployees == 0) {
-            throw new RuntimeException("В отдеде № " + department + " нет сотрудников.");
         }
         return sumOfSalaries;
     }
 
-    public double calculateAverageSalary_Department(int department) {
-        Employee.checkDepartmentIsAcceptable(department);
-        checkEmployeeBookIsNotEmpty();
-        double sumOfSalaries = calculateSumOfSalaries_Department(department);
+    private int countEmployeesInDepartment(int department) { // Наверное, лишнее. Но не хотелось
+        // дублировать код с подсчётом сотрудников в отделе для методов выше и ниже
         int numberOfEmployees = 0;
         for (Employee employee : employeeBook) {
             if (employee == null) {
@@ -283,7 +298,11 @@ public class EmployeeBook {
                 numberOfEmployees++;
             }
         }
-        return sumOfSalaries / numberOfEmployees;
+        return numberOfEmployees;
+    }
+
+    public double calculateAverageSalary_Department(int department) {
+        return calculateSumOfSalaries_Department(department) / countEmployeesInDepartment(department);
     }
 
     public void indexSalaries_Department(int department, double percent) {
