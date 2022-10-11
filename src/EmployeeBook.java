@@ -273,7 +273,7 @@ public class EmployeeBook {
         Employee.checkDepartmentIsAcceptable(department);
         checkEmployeeBookIsNotEmpty();
         if (countEmployeesInDepartment(department) == 0) {
-            throw new RuntimeException("В отдеде № " + department + " нет сотрудников.");
+            throw new RuntimeException("В отделе № " + department + " нет сотрудников!");
         }
         double sumOfSalaries = 0;
         for (Employee employee : employeeBook) {
@@ -287,8 +287,12 @@ public class EmployeeBook {
         return sumOfSalaries;
     }
 
-    private int countEmployeesInDepartment(int department) { // Наверное, лишнее. Но не хотелось
-        // дублировать код с подсчётом сотрудников в отделе для методов выше и ниже
+    public double calculateAverageSalary_Department(int department) {
+        return calculateSumOfSalaries_Department(department) / countEmployeesInDepartment(department);
+    }
+
+    private int countEmployeesInDepartment(int department) { // Сделала приватным,
+        // т.к. по заданию он не нужен, и вызывается только в других местных методах.
         int numberOfEmployees = 0;
         for (Employee employee : employeeBook) {
             if (employee == null) {
@@ -301,13 +305,12 @@ public class EmployeeBook {
         return numberOfEmployees;
     }
 
-    public double calculateAverageSalary_Department(int department) {
-        return calculateSumOfSalaries_Department(department) / countEmployeesInDepartment(department);
-    }
-
     public void indexSalaries_Department(int department, double percent) {
         Employee.checkDepartmentIsAcceptable(department);
         checkEmployeeBookIsNotEmpty();
+        if (countEmployeesInDepartment(department) == 0) {
+            throw new RuntimeException("В отделе № " + department + " нет сотрудников!");
+        }
         for (Employee employee : employeeBook) {
             if (employee == null) {
                 break;
